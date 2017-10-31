@@ -207,5 +207,115 @@ describe GildedRose do
         end
       end
     end
+
+    # Backstage passes to a TAFKAL80ETC concert
+
+    context 'when item is Backstage passes to a TAFKAL80ETC concert' do
+      it_behaves_like 'normal item sell in', item_name = 'Backstage passes to a TAFKAL80ETC concert'
+
+      context 'item quality' do
+        it_behaves_like 'quality value', item_name = 'Backstage passes to a TAFKAL80ETC concert'
+
+        context 'when sell in date not passed yet' do
+          context 'when sell in above 10 days' do
+            it 'increases by 1 the older it gets' do
+              n = 5
+              quality = 1
+              item = Item.new('Backstage passes to a TAFKAL80ETC concert', sell_in = 15, quality = quality)
+              items = [item]
+              gilded_rose = described_class.new(items)
+
+              n.times do |i|
+                gilded_rose.update_quality
+                expect(item.quality).to eq (quality + i + 1)
+              end
+
+              expect(item.quality).to eq (quality + n)
+            end
+
+            it 'increases to 50 when sell_in above 10 and quality is 49' do
+              item = Item.new('Backstage passes to a TAFKAL80ETC concert', sell_in = 15, quality = 49)
+              items = [item]
+              gilded_rose = described_class.new(items)
+              gilded_rose.update_quality
+
+              expect(item.quality).to eq 50
+            end
+
+            it 'increases to 50 instead of 51 when sell_in at least 5 and quality is 49' do
+              item = Item.new('Backstage passes to a TAFKAL80ETC concert', sell_in = 5, quality = 49)
+              items = [item]
+              gilded_rose = described_class.new(items)
+              gilded_rose.update_quality
+
+              expect(item.quality).to eq 50
+            end
+          end
+
+          context 'when sell in 10 days or less and above 5 days' do
+            it 'increases by 2 the older it gets' do
+              n = 5
+              quality = 1
+              item = Item.new('Backstage passes to a TAFKAL80ETC concert', sell_in = 10, quality = quality)
+              items = [item]
+              gilded_rose = described_class.new(items)
+
+              n.times do |i|
+                gilded_rose.update_quality
+                expect(item.quality).to eq (quality + 2 * (i + 1))
+              end
+
+              expect(item.quality).to eq (quality + (2 * n))
+            end
+
+            it 'increases to 50 instead of 52 when sell_in at least 1 and quality is 49' do
+              item = Item.new('Backstage passes to a TAFKAL80ETC concert', sell_in = 1, quality = 49)
+              items = [item]
+              gilded_rose = described_class.new(items)
+              gilded_rose.update_quality
+
+              expect(item.quality).to eq 50
+            end
+          end
+
+          context 'when sell in 5 days or less' do
+            it 'increases by 3 the older it gets' do
+              n = 5
+              quality = 1
+              item = Item.new('Backstage passes to a TAFKAL80ETC concert', sell_in = 5, quality = quality)
+              items = [item]
+              gilded_rose = described_class.new(items)
+
+              n.times do |i|
+                gilded_rose.update_quality
+                expect(item.quality).to eq (quality + 3 * (i + 1))
+              end
+
+              expect(item.quality).to eq (quality + (3 * n))
+            end
+
+            it 'increases to 50 instead of 52 when sell_in at least 1 and quality is 49' do
+              item = Item.new('Backstage passes to a TAFKAL80ETC concert', sell_in = 1, quality = 49)
+              items = [item]
+              gilded_rose = described_class.new(items)
+              gilded_rose.update_quality
+
+              expect(item.quality).to eq 50
+            end
+          end
+        end
+
+        context 'when sell in date has passed' do
+          it 'drops to zero after the concert' do
+            item = Item.new('Backstage passes to a TAFKAL80ETC concert', sell_in = 0, quality = 5)
+            items = [item]
+            gilded_rose = described_class.new(items)
+            gilded_rose.update_quality
+
+            expect(item.quality).to eq 0
+          end
+        end
+      end
+    end
   end
 end
