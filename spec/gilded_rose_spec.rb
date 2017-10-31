@@ -126,5 +126,58 @@ describe GildedRose do
         end
       end
     end
+
+    # Aged Brie
+
+    context 'when item is Aged Brie' do
+      it_behaves_like 'normal item sell in', item_name = 'Aged Brie'
+
+      context 'item quality' do
+        context 'when sell in date not passed yet' do
+          it 'increases by 1 the older it gets' do
+            n = 5
+            item = Item.new('Aged Brie', sell_in = n, quality = 0)
+            items = [item]
+            gilded_rose = described_class.new(items)
+
+            n.times do |i|
+              gilded_rose.update_quality
+              expect(item.quality).to eq (i + 1)
+            end
+
+            expect(item.quality).to eq n
+          end
+        end
+
+        context 'when sell in date has passed' do
+          it 'increases twice as fast the older it gets' do
+            n = 5
+            item = Item.new('Aged Brie', sell_in = 0, quality = 0)
+            items = [item]
+            gilded_rose = described_class.new(items)
+
+            n.times do |i|
+              gilded_rose.update_quality
+              expect(item.quality).to eq (2 * (i + 1))
+            end
+
+            expect(item.quality).to eq (2 * n)
+          end
+        end
+
+        it 'is never more than 50' do
+          n = 2
+          item = Item.new('Aged Brie', sell_in = n, quality = 49)
+          items = [item]
+          gilded_rose = described_class.new(items)
+
+          n.times do
+            gilded_rose.update_quality
+          end
+
+          expect(item.quality).to eq 50
+        end
+      end
+    end
   end
 end
