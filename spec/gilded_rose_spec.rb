@@ -179,5 +179,33 @@ describe GildedRose do
         end
       end
     end
+
+    # Sulfuras, Hand of Ragnaros
+
+    context 'when item is Sulfuras, Hand of Ragnaros' do
+      context 'item sell in' do
+        it 'does not change the sell in' do
+          item = Item.new('Sulfuras, Hand of Ragnaros', sell_in = 0, quality = 0)
+          items = [item]
+          gilded_rose = described_class.new(items)
+          gilded_rose.update_quality
+
+          expect(item.sell_in).to eq 0
+        end
+      end
+
+      context 'item quality' do
+        it_behaves_like 'quality value', item_name = 'Sulfuras, Hand of Ragnaros'
+
+        it 'does not change the quality' do
+          item = Item.new('Sulfuras, Hand of Ragnaros', sell_in = 0, quality = 0)
+          items = [item]
+          gilded_rose = described_class.new(items)
+          gilded_rose.update_quality
+
+          expect(item.quality).to eq 0
+        end
+      end
+    end
   end
 end
