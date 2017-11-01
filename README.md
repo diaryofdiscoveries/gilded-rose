@@ -16,7 +16,6 @@ How to set up the application
 $ git clone https://github.com/diaryofdiscoveries/gilded-rose.git
 $ cd gilded-rose
 $ bundle
-
 ```
 Tested using:
 ----
