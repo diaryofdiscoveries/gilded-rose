@@ -1,0 +1,2 @@
+class SulfurasUpdater < ItemUpdater
+end
