@@ -8,61 +8,15 @@ class GildedRose
       case item.name
 
       when 'Aged Brie'
-        quality = if item.sell_in > 0
-                    item.quality + 1
-                  else
-                    item.quality + 2
-                  end
-
-        item.quality = quality if quality <= 50
-        item.quality = 50 if quality > 50
-        item.sell_in -= 1
-
-        return
-
+        AgedBrieUpdater.new(item).update
       when 'Sulfuras, Hand of Ragnaros'
-
-        return
-
+        SulfurasUpdater.new(item).update
       when 'Backstage passes to a TAFKAL80ETC concert'
-        if item.sell_in > 10
-          quality = item.quality += 1
-        elsif item.sell_in > 5
-          quality = item.quality += 2
-        elsif item.sell_in > 0
-          quality = item.quality += 3
-        elsif
-          quality = item.quality = 0
-        end
-
-        item.quality = 50 if quality > 50
-        item.sell_in -= 1
-
-        return
-
+        BackstagePassesUpdater.new(item).update
       when 'Conjured'
-        quality = item.quality -= 2
-
-        item.quality = quality if quality >= 0
-        item.quality = 0 if quality < 0
-
-        item.sell_in -= 1
-
-        return
-
+        ConjuredUpdater.new(item).update
       else
-        quality = if item.sell_in > 0
-                    item.quality - 1
-                  else
-                    item.quality - 2
-                  end
-
-        item.quality = quality if quality >= 0
-
-        item.sell_in -= 1
-
-        return
-
+        NormalUpdater.new(item).update
       end
     end
   end
@@ -79,5 +33,105 @@ class Item
 
   def to_s
     "#{@name}, #{@sell_in}, #{@quality}"
+  end
+end
+
+class ItemUpdater
+  attr_reader :item
+
+  def initialize(item)
+    @item = item
+  end
+
+  def update
+    update_quality
+    update_sell_in
+  end
+
+  private
+
+  def update_quality
+    # raise NotImplementedError
+  end
+
+  def update_sell_in
+    # raise NotImplementedError
+  end
+end
+
+class NormalUpdater < ItemUpdater
+  private
+
+  def update_quality
+    quality = if item.sell_in > 0
+                item.quality - 1
+              else
+                item.quality - 2
+              end
+
+    item.quality = quality if quality >= 0
+  end
+
+  def update_sell_in
+    item.sell_in -= 1
+  end
+end
+
+class AgedBrieUpdater < ItemUpdater
+  private
+
+  def update_quality
+    quality = if item.sell_in > 0
+                item.quality + 1
+              else
+                item.quality + 2
+              end
+
+    item.quality = quality if quality <= 50
+    item.quality = 50 if quality > 50
+  end
+
+  def update_sell_in
+    item.sell_in -= 1
+  end
+end
+
+class SulfurasUpdater < ItemUpdater
+end
+
+class BackstagePassesUpdater < ItemUpdater
+  private
+
+  def update_quality
+    if item.sell_in > 10
+      quality = item.quality += 1
+    elsif item.sell_in > 5
+      quality = item.quality += 2
+    elsif item.sell_in > 0
+      quality = item.quality += 3
+    elsif
+      quality = item.quality = 0
+    end
+
+    item.quality = 50 if quality > 50
+  end
+
+  def update_sell_in
+    item.sell_in -= 1
+  end
+end
+
+class ConjuredUpdater < ItemUpdater
+  private
+
+  def update_quality
+    quality = item.quality -= 2
+
+    item.quality = quality if quality >= 0
+    item.quality = 0 if quality < 0
+  end
+
+  def update_sell_in
+    item.sell_in -= 1
   end
 end
