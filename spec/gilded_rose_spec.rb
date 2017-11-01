@@ -317,5 +317,39 @@ describe GildedRose do
         end
       end
     end
+
+    # Conjured
+
+    context 'when item is Conjured' do
+      it_behaves_like 'normal item sell in', item_name = 'Conjured'
+
+      context 'item quality' do
+        it_behaves_like 'quality value', item_name = 'Conjured'
+
+        it 'lowers quality value by 2 at the end of the day' do
+          item = Item.new('Conjured', sell_in = 1, quality = 2)
+          items = [item]
+          gilded_rose = described_class.new(items)
+          gilded_rose.update_quality
+
+          expect(item.quality).to eq 0
+        end
+
+        it 'lowers quality value twice as fast after n days' do
+          n = 5
+          quality = 15
+          item = Item.new('Conjured', sell_in = 1, quality = quality)
+          items = [item]
+          gilded_rose = described_class.new(items)
+
+          n.times do |i|
+            gilded_rose.update_quality
+            expect(item.quality).to eq (quality - (2 * (i + 1)))
+          end
+
+          expect(item.quality).to eq (quality - (2 * n))
+        end
+      end
+    end
   end
 end

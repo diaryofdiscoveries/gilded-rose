@@ -40,6 +40,16 @@ class GildedRose
 
         return
 
+      when 'Conjured'
+        quality = item.quality -= 2
+
+        item.quality = quality if quality >= 0
+        item.quality = 0 if quality < 0
+
+        item.sell_in -= 1
+
+        return
+
       else
         quality = if item.sell_in > 0
                     item.quality - 1
