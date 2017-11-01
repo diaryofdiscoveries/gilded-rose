@@ -1,6 +1,6 @@
 Gilded Rose Tech Test
 =====================
-This is a well known kata developed by [Terry Hughes](http://iamnotmyself.com/2011/02/13/refactor-this-the-gilded-rose-kata/).
+My attempt at this well known kata developed by [Terry Hughes](http://iamnotmyself.com/2011/02/13/refactor-this-the-gilded-rose-kata/).
 
 Objectives of exercise
 ----
@@ -15,11 +15,15 @@ How to set up the application
 ```
 $ git clone https://github.com/diaryofdiscoveries/gilded-rose.git
 $ cd gilded-rose
+$ bundle
 
 ```
 Tested using:
 ----
 - RSpec
+- SimpleCov (coverage)
+- Rubocop (linting)
+- Flog (complexity)
 
 How to run tests
 ----
@@ -27,6 +31,12 @@ How to run tests
 $ cd gilded-rose
 $ rspec
 ```
+To test for complexity:
+```
+$ cd gilded-rose
+$ find lib -name \*.rb | xargs flog
+```
+
 The Brief
 ----
 
